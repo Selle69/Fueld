@@ -76,9 +76,9 @@ export async function getDb(): Promise<SqlJsWrapper> {
   const mod = await timeout(
     import("sql.js/dist/sql-wasm-browser.js"),
     10000,
-    "sql.js browser chunk laden"
+    "sql.js browser chunk laden",
   );
-  const initSqlJs = (mod as unknown as { default: InitSqlJs }).default;
+  const initSqlJs = mod.default;
 
   const SQL = await timeout(
     initSqlJs({ locateFile: () => wasmUrl }),
