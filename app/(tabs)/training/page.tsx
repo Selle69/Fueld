@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useSessionStore } from "@/store/sessionStore";
 import { getDb } from "@/lib/db/init";
 import Spinner from "@/components/Spinner";
+import TrainingAdjustmentsModal from "@/components/TrainingAdjustmentsModal";
 
 interface SessionRow {
   id: number;
@@ -163,6 +164,7 @@ export default function TrainingPage() {
 
   return (
     <div className="px-4 pt-6 pb-6 space-y-4">
+      <TrainingAdjustmentsModal />
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold text-slate-800">Training</h1>
         <Link href="/training/plans" className="text-sm text-blue-500 font-semibold active:opacity-70">

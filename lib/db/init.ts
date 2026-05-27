@@ -59,6 +59,11 @@ async function migrate(db: SqlJsWrapper): Promise<void> {
   if (!tsCols.some(c => c.name === "template_id")) {
     await db.execAsync("ALTER TABLE training_session ADD COLUMN template_id INTEGER");
   }
+
+  const sleepCols = await db.getAllAsync<{ name: string }>("PRAGMA table_info(sleep_log)");
+  if (sleepCols.length > 0 && !sleepCols.some(c => c.name === "duration_h")) {
+    await db.execAsync("ALTER TABLE sleep_log ADD COLUMN duration_h REAL");
+  }
 }
 
 let _db: SqlJsWrapper | null = null;

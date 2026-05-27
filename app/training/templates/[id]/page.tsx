@@ -5,6 +5,8 @@ import { useRouter, useParams } from "next/navigation";
 import { getDb } from "@/lib/db/init";
 import { useSessionStore } from "@/store/sessionStore";
 import Spinner from "@/components/Spinner";
+import ExerciseSearchInput from "@/components/ExerciseSearchInput";
+import MuscleChips from "@/components/MuscleChips";
 
 interface TemplateExercise {
   id: number;
@@ -216,6 +218,7 @@ export default function TemplateDetailPage() {
                   </svg>
                 </p>
                 {template?.focus && <p className="text-xs text-slate-400">{template.focus}</p>}
+                <MuscleChips muscles={[...new Set(exercises.map(e => e.muscle_group).filter((m): m is string => !!m))]} />
               </button>
             )}
           </div>
@@ -251,13 +254,11 @@ export default function TemplateDetailPage() {
             <h3 className="font-semibold text-slate-700">Neue Übung</h3>
             <div>
               <label className="block text-xs text-slate-400 mb-1">Übungsname *</label>
-              <input
-                type="text"
+              <ExerciseSearchInput
                 value={newName}
-                onChange={e => setNewName(e.target.value)}
-                placeholder="z.B. Bankdrücken"
+                onChange={setNewName}
+                onMuscleSelect={setNewMuscle}
                 autoFocus
-                className="border border-slate-200 rounded-xl px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
             </div>
             <div>

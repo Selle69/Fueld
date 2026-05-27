@@ -4,6 +4,8 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { getDb } from "@/lib/db/init";
 import Spinner from "@/components/Spinner";
+import ExerciseSearchInput from "@/components/ExerciseSearchInput";
+import MuscleChips from "@/components/MuscleChips";
 
 const DAY_NAMES: Record<number, string> = {
   1: "Montag", 2: "Dienstag", 3: "Mittwoch", 4: "Donnerstag",
@@ -224,6 +226,7 @@ export default function DayDetailPage() {
                   {DAY_NAMES[day?.day_of_week ?? 1]}
                   {day?.focus ? ` · ${day.focus}` : ""}
                 </p>
+                <MuscleChips muscles={[...new Set(exercises.map(e => e.muscle_group).filter((m): m is string => !!m))]} />
               </button>
             )}
           </div>
@@ -252,13 +255,11 @@ export default function DayDetailPage() {
             <h3 className="font-semibold text-slate-700">Neue Übung</h3>
             <div>
               <label className="block text-xs text-slate-400 mb-1">Übungsname *</label>
-              <input
-                type="text"
+              <ExerciseSearchInput
                 value={newName}
-                onChange={e => setNewName(e.target.value)}
-                placeholder="z.B. Bankdrücken"
+                onChange={setNewName}
+                onMuscleSelect={setNewMuscle}
                 autoFocus
-                className="border border-slate-200 rounded-xl px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
             </div>
             <div>

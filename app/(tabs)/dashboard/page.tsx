@@ -7,6 +7,7 @@ import { useTodayStore } from "@/store/todayStore";
 import MacroBar from "@/components/MacroBar";
 import Spinner from "@/components/Spinner";
 import InfoTooltip from "@/components/InfoTooltip";
+import InsightsSection from "@/components/InsightsSection";
 
 const MEAL_TYPE_LABELS: Record<string, string> = {
   breakfast: "Frühstück",
@@ -124,6 +125,9 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
+
+      {/* AI Coach */}
+      <InsightsSection />
     </div>
   );
 }

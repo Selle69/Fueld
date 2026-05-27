@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { getDb } from "@/lib/db/init";
 import Spinner from "@/components/Spinner";
+import MuscleChips, { parseMuscles } from "@/components/MuscleChips";
 
 const DAY_NAMES: Record<number, string> = {
   1: "Montag", 2: "Dienstag", 3: "Mittwoch", 4: "Donnerstag",
@@ -21,6 +22,7 @@ interface WorkoutDay {
   name: string;
   focus: string | null;
   exercise_count: number;
+  muscle_groups: string | null;
 }
 
 interface Plan {
@@ -58,7 +60,8 @@ export default function PlanDetailPage() {
     setPlanName(p.name);
     const d = await db.getAllAsync<WorkoutDay>(`
       SELECT wd.id, wd.day_of_week, wd.day_mask, wd.name, wd.focus,
-             COUNT(e.id) AS exercise_count
+             COUNT(e.id) AS exercise_count,
+             GROUP_CONCAT(DISTINCT e.muscle_group) AS muscle_groups
       FROM workout_day wd
       LEFT JOIN exercise e ON e.workout_day_id = wd.id
       WHERE wd.plan_id = ?
@@ -181,6 +184,7 @@ export default function PlanDetailPage() {
                       {day.focus ? ` · ${day.focus}` : ""}
                       {" · "}{day.exercise_count} {day.exercise_count === 1 ? "Übung" : "Übungen"}
                     </p>
+                    <MuscleChips muscles={parseMuscles(day.muscle_groups)} />
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <button

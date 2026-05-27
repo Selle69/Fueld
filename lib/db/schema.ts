@@ -204,4 +204,15 @@ CREATE TABLE IF NOT EXISTS template_exercise (
 
 CREATE INDEX IF NOT EXISTS idx_template_exercise_template
   ON template_exercise(template_id, sort_order);
+
+CREATE TABLE IF NOT EXISTS sleep_log (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  profile_id INTEGER NOT NULL DEFAULT 1,
+  date       TEXT    NOT NULL,
+  quality    INTEGER NOT NULL,
+  duration_h REAL,
+  UNIQUE(profile_id, date)
+);
+CREATE INDEX IF NOT EXISTS idx_sleep_log_date
+  ON sleep_log(profile_id, date DESC);
 `;

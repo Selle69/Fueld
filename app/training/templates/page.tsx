@@ -5,12 +5,14 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getDb } from "@/lib/db/init";
 import Spinner from "@/components/Spinner";
+import MuscleChips, { parseMuscles } from "@/components/MuscleChips";
 
 interface WorkoutTemplate {
   id: number;
   name: string;
   focus: string | null;
   exercise_count: number;
+  muscle_groups: string | null;
 }
 
 export default function TemplatesPage() {
@@ -26,7 +28,8 @@ export default function TemplatesPage() {
     const db = await getDb();
     const rows = await db.getAllAsync<WorkoutTemplate>(`
       SELECT wt.id, wt.name, wt.focus,
-             COUNT(te.id) AS exercise_count
+             COUNT(te.id) AS exercise_count,
+             GROUP_CONCAT(DISTINCT te.muscle_group) AS muscle_groups
       FROM workout_template wt
       LEFT JOIN template_exercise te ON te.template_id = wt.id
       WHERE wt.profile_id = 1
@@ -111,9 +114,11 @@ export default function TemplatesPage() {
                   </svg>
                 </button>
               </div>
-              <p className="text-xs text-slate-400 mb-3">
+              <p className="text-xs text-slate-400">
                 {t.exercise_count} {t.exercise_count === 1 ? "Übung" : "Übungen"}
               </p>
+              <MuscleChips muscles={parseMuscles(t.muscle_groups)} />
+              <div className="mt-3" />
               <Link
                 href={`/training/templates/${t.id}`}
                 className="block text-center bg-slate-100 text-slate-700 rounded-xl px-4 py-2 text-sm font-semibold active:opacity-80"
